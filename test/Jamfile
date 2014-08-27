@@ -5,6 +5,207 @@ project /snl/tests : requirements
         :
         ;
 
-test-suite snl/cstdint :
-           [ run cstdint.cpp : : :  <define>SOURCE_TYPE=snl::uint8_t <define>DESTINATION_TYPE=snl::uint8_t : uint8_to_uint8 ]
+test-suite snl/unsigned_implicit_conversions :
+           # Test all snl -> snl conversions
+           [ run implicit_conversion.cpp
+               :
+               :
+               :  <define>SOURCE_TYPE=snl::uint8_t
+                  <define>DESTINATION_TYPE=snl::uint8_t
+               : snl-uint8_to_snl-uint8
+           ]
+           [ run implicit_conversion.cpp
+               :
+               :
+               :  <define>SOURCE_TYPE=snl::uint8_t
+                  <define>DESTINATION_TYPE=snl::uint16_t
+               : snl-uint8_to_snl-uint16
+           ]
+           [ run implicit_conversion.cpp
+               :
+               :
+               :  <define>SOURCE_TYPE=snl::uint8_t
+                  <define>DESTINATION_TYPE=snl::uint32_t
+               : snl-uint8_to_snl-uint32
+           ]
+           [ run implicit_conversion.cpp
+               :
+               :
+               :  <define>SOURCE_TYPE=snl::uint8_t
+                  <define>DESTINATION_TYPE=snl::uint64_t
+               : snl-uint8_to_snl-uint64
+           ]
+           [ compile-fail implicit_conversion.cpp
+               :  <define>SOURCE_TYPE=snl::uint16_t
+                  <define>DESTINATION_TYPE=snl::uint8_t
+               : snl-uint16_to_snl-uint8
+           ]
+           [ run implicit_conversion.cpp
+               :
+               :
+               :  <define>SOURCE_TYPE=snl::uint16_t
+                  <define>DESTINATION_TYPE=snl::uint16_t
+               : snl-uint16_to_snl-uint16
+           ]
+           [ run implicit_conversion.cpp
+               :
+               :
+               :  <define>SOURCE_TYPE=snl::uint16_t
+                  <define>DESTINATION_TYPE=snl::uint32_t
+               : snl-uint16_to_snl-uint32
+           ]
+           [ run implicit_conversion.cpp
+               :
+               :
+               :  <define>SOURCE_TYPE=snl::uint16_t
+                  <define>DESTINATION_TYPE=snl::uint64_t
+               : snl-uint16_to_snl-uint64
+           ]
+           [ compile-fail implicit_conversion.cpp
+               :  <define>SOURCE_TYPE=snl::uint32_t
+                  <define>DESTINATION_TYPE=snl::uint16_t
+               : snl-uint32_to_snl-uint8
+           ]
+           [ compile-fail implicit_conversion.cpp
+               :  <define>SOURCE_TYPE=snl::uint32_t
+                  <define>DESTINATION_TYPE=snl::uint16_t
+               : snl-uint32_to_snl-uint16
+           ]
+           [ run implicit_conversion.cpp
+               :
+               :
+               :  <define>SOURCE_TYPE=snl::uint32_t
+                  <define>DESTINATION_TYPE=snl::uint32_t
+               : snl-uint32_to_snl-uint32
+           ]
+           [ run implicit_conversion.cpp
+               :
+               :
+               :  <define>SOURCE_TYPE=snl::uint32_t
+                  <define>DESTINATION_TYPE=snl::uint64_t
+               : snl-uint32_to_snl-uint64
+           ]
+           [ compile-fail implicit_conversion.cpp
+               :  <define>SOURCE_TYPE=snl::uint64_t
+                  <define>DESTINATION_TYPE=snl::uint8_t
+               : snl-uint64_to_snl-uint8
+           ]
+           [ compile-fail implicit_conversion.cpp
+               :  <define>SOURCE_TYPE=snl::uint64_t
+                  <define>DESTINATION_TYPE=snl::uint16_t
+               : snl-uint64_to_snl-uint16
+           ]
+           [ compile-fail implicit_conversion.cpp
+               :  <define>SOURCE_TYPE=snl::uint64_t
+                  <define>DESTINATION_TYPE=snl::uint32_t
+               : snl-uint64_to_snl-uint32
+           ]
+           [ run implicit_conversion.cpp
+               :
+               :
+               :  <define>SOURCE_TYPE=snl::uint64_t
+                  <define>DESTINATION_TYPE=snl::uint64_t
+               : snl-uint64_to_snl-uint64
+           ]
+           # Test all scalar -> snl conversions
+           [ run implicit_conversion.cpp
+               :
+               :
+               :  <define>SOURCE_TYPE=std::uint8_t
+                  <define>DESTINATION_TYPE=snl::uint8_t
+               : std-uint8_to_snl-uint8
+           ]
+           [ run implicit_conversion.cpp
+               :
+               :
+               :  <define>SOURCE_TYPE=std::uint8_t
+                  <define>DESTINATION_TYPE=snl::uint16_t
+               : std-uint8_to_snl-uint16
+           ]
+           [ run implicit_conversion.cpp
+               :
+               :
+               :  <define>SOURCE_TYPE=std::uint8_t
+                  <define>DESTINATION_TYPE=snl::uint32_t
+               : std-uint8_to_snl-uint32
+           ]
+           [ run implicit_conversion.cpp
+               :
+               :
+               :  <define>SOURCE_TYPE=std::uint8_t
+                  <define>DESTINATION_TYPE=snl::uint64_t
+               : std-uint8_to_snl-uint64
+           ]
+           [ compile-fail implicit_conversion.cpp
+               :  <define>SOURCE_TYPE=std::uint16_t
+                  <define>DESTINATION_TYPE=snl::uint8_t
+               : std-uint16_to_snl-uint8
+           ]
+           [ run implicit_conversion.cpp
+               :
+               :
+               :  <define>SOURCE_TYPE=std::uint16_t
+                  <define>DESTINATION_TYPE=snl::uint16_t
+               : std-uint16_to_snl-uint16
+           ]
+           [ run implicit_conversion.cpp
+               :
+               :
+               :  <define>SOURCE_TYPE=std::uint16_t
+                  <define>DESTINATION_TYPE=snl::uint32_t
+               : std-uint16_to_snl-uint32
+           ]
+           [ run implicit_conversion.cpp
+               :
+               :
+               :  <define>SOURCE_TYPE=std::uint16_t
+                  <define>DESTINATION_TYPE=snl::uint64_t
+               : std-uint16_to_snl-uint64
+           ]
+           [ compile-fail implicit_conversion.cpp
+               :  <define>SOURCE_TYPE=std::uint32_t
+                  <define>DESTINATION_TYPE=snl::uint16_t
+               : std-uint32_to_snl-uint8
+           ]
+           [ compile-fail implicit_conversion.cpp
+               :  <define>SOURCE_TYPE=std::uint32_t
+                  <define>DESTINATION_TYPE=snl::uint16_t
+               : std-uint32_to_snl-uint16
+           ]
+           [ run implicit_conversion.cpp
+               :
+               :
+               :  <define>SOURCE_TYPE=std::uint32_t
+                  <define>DESTINATION_TYPE=snl::uint32_t
+               : std-uint32_to_snl-uint32
+           ]
+           [ run implicit_conversion.cpp
+               :
+               :
+               :  <define>SOURCE_TYPE=std::uint32_t
+                  <define>DESTINATION_TYPE=snl::uint64_t
+               : std-uint32_to_snl-uint64
+           ]
+           [ compile-fail implicit_conversion.cpp
+               :  <define>SOURCE_TYPE=std::uint64_t
+                  <define>DESTINATION_TYPE=snl::uint8_t
+               : std-uint64_to_snl-uint8
+           ]
+           [ compile-fail implicit_conversion.cpp
+               :  <define>SOURCE_TYPE=std::uint64_t
+                  <define>DESTINATION_TYPE=snl::uint16_t
+               : std-uint64_to_snl-uint16
+           ]
+           [ compile-fail implicit_conversion.cpp
+               :  <define>SOURCE_TYPE=std::uint64_t
+                  <define>DESTINATION_TYPE=snl::uint32_t
+               : std-uint64_to_snl-uint32
+           ]
+           [ run implicit_conversion.cpp
+               :
+               :
+               :  <define>SOURCE_TYPE=std::uint64_t
+                  <define>DESTINATION_TYPE=snl::uint64_t
+               : std-uint64_to_snl-uint64
+           ]
            ;

@@ -85,17 +85,50 @@ namespace snl
              // template traits, the template keyword does not delay
              // the lookup for some reason.
 
+
+        template<typename SourceType>
+        struct enable_implicit_conversion_helper :
+            std::integral_constant<
+                bool,
+                check_conversion<ScalarType>::template
+                    allow_implicit_conversion<check_conversion<SourceType>>()>
+        {
+        };
+
+        template<typename SourceType>
+        struct enable_implicit_conversion_helper<check_conversion<SourceType>> :
+            std::integral_constant<
+                bool,
+                check_conversion<ScalarType>::template
+                allow_implicit_conversion<check_conversion<SourceType>>()>
+        {
+        };
+
         template<typename SourceType>
         using enable_implicit_conversion =
             typename std::enable_if<
-                check_conversion<ScalarType>::template
-                    allow_implicit_conversion<SourceType>(), void*>::type;
+                enable_implicit_conversion_helper<SourceType>::value,
+                void*>::type;
 
         template<typename SourceType>
         using disable_explicit_conversion =
             typename std::enable_if<
-                !check_conversion<ScalarType>::template
-                    allow_implicit_conversion<SourceType>(), void*>::type;
+                !enable_implicit_conversion_helper<SourceType>::value,
+                void*>::type;
+
+        template<typename SourceScalarType>
+        static constexpr SourceScalarType extract_value(
+            SourceScalarType const value)
+        {
+            return value;
+        }
+
+        template<typename SourceScalarType>
+        static constexpr SourceScalarType extract_value(
+            check_conversion<SourceScalarType> const value)
+        {
+            return value.get_value();
+        }
 
     public: // Constructors and functions
 
@@ -107,35 +140,19 @@ namespace snl
 
           \param[in] value The value to be represented by the checked class.
          */
-        template<typename SourceScalarType>
-        check_conversion(
-                SourceScalarType const value,
-                enable_implicit_conversion<check_conversion<SourceScalarType>> = 0) :
-            value_(value)
-        {
-        }
-
         template<typename SourceType>
         check_conversion(
-                check_conversion<SourceType> const value,
+                SourceType const value,
                 enable_implicit_conversion<SourceType> = 0) :
-            value_(value.get_value())
-        {
-        }
-
-	template<typename SourceScalarType>
-        explicit check_conversion(
-                SourceScalarType const value,
-                disable_explicit_conversion<check_conversion<SourceScalarType>> = 0) :
-            value_(value)
+            value_(extract_value(value))
         {
         }
 
         template<typename SourceType>
         explicit check_conversion(
-                check_conversion<SourceType> const value,
+                SourceType const value,
                 disable_explicit_conversion<SourceType> = 0) :
-            value_(value.get_value())
+            value_(extract_value(value))
         {
         }
 
