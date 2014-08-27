@@ -1,0 +1,10 @@
+import testing ;
+
+project /snl/tests : requirements
+        :
+        :
+        ;
+
+test-suite snl/cstdint :
+           [ run cstdint.cpp : : :  <define>SOURCE_TYPE=snl::uint8_t <define>DESTINATION_TYPE=snl::uint8_t : uint8_to_uint8 ]
+           ;
