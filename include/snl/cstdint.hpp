@@ -187,9 +187,13 @@ namespace snl
         ScalarType value_;
     };
 
-    typedef check_conversion<std::uint8_t> uint8_t;
+    typedef check_conversion<std::int8_t>   int8_t;
+    typedef check_conversion<std::uint8_t>  uint8_t;
+    typedef check_conversion<std::int16_t>  int16_t;
     typedef check_conversion<std::uint16_t> uint16_t;
+    typedef check_conversion<std::int32_t>  int32_t;
     typedef check_conversion<std::uint32_t> uint32_t;
+    typedef check_conversion<std::int64_t>  int64_t;
     typedef check_conversion<std::uint64_t> uint64_t;
 }
 
