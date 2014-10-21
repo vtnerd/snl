@@ -14,8 +14,31 @@ namespace snl
 
     template<typename ScalarType>
     struct is_check_conversion<check_conversion<ScalarType>> : std::true_type {};
+}
 
+namespace std
+{
+    template<typename ScalarType1, typename ScalarType2>
+    struct common_type<check_conversion<ScalarType1>, check_conversion<ScalarType2>>
+    {
+	typedef check_conversion<common_type_t<ScalarType1, ScalarType2>> type;
+    };
 
+    template<typename ScalarType, typename OtherType>
+    struct common_type<check_conversion<ScalarType>, OtherType>
+    {
+	typedef check_conversion<common_type_t<ScalarType, OtherType>> type;
+    };
+
+    template<typename OtherType, typename ScalarType>
+    struct common_type<OtherType, check_conversion<ScalarType>>
+    {
+	typedef check_conversion<common_type_t<OtherType, ScalarType>> type;
+    };
+}
+
+namespace snl
+{
     template<typename ScalarType>
     class check_conversion
     {
@@ -100,7 +123,7 @@ namespace snl
             std::integral_constant<
                 bool,
                 check_conversion<ScalarType>::template
-                allow_implicit_conversion<check_conversion<SourceType>>()>
+                    allow_implicit_conversion<check_conversion<SourceType>>()>
         {
         };
 
@@ -111,7 +134,7 @@ namespace snl
                 void*>::type;
 
         template<typename SourceType>
-        using disable_explicit_conversion =
+        using enable_explicit_conversion =
             typename std::enable_if<
                 !enable_implicit_conversion_helper<SourceType>::value,
                 void*>::type;
@@ -151,7 +174,7 @@ namespace snl
         template<typename SourceType>
         explicit check_conversion(
                 SourceType const value,
-                disable_explicit_conversion<SourceType> = 0) :
+                enable_explicit_conversion<SourceType> = 0) :
             value_(extract_value(value))
         {
         }
@@ -187,14 +210,55 @@ namespace snl
         ScalarType value_;
     };
 
-    typedef check_conversion<std::int8_t>   int8_t;
-    typedef check_conversion<std::uint8_t>  uint8_t;
-    typedef check_conversion<std::int16_t>  int16_t;
+    typedef check_conversion<std::int8_t>     int8_t;
+    typedef check_conversion<std::uint8_t>   uint8_t;
+    typedef check_conversion<std::int16_t>   int16_t;
     typedef check_conversion<std::uint16_t> uint16_t;
-    typedef check_conversion<std::int32_t>  int32_t;
+    typedef check_conversion<std::int32_t>   int32_t;
     typedef check_conversion<std::uint32_t> uint32_t;
-    typedef check_conversion<std::int64_t>  int64_t;
+    typedef check_conversion<std::int64_t>   int64_t;
     typedef check_conversion<std::uint64_t> uint64_t;
+
+
+    //
+    // OPERATORS
+    //
+    namespace checked_detail
+    {
+	template<typename Type1, typename Type2>
+	inline constexpr bool allow_common_conversion()
+	{
+	    typedef common_type_t<Type1 Type2> CommonType;
+	    return CommonType<Type1>::allow_implicit_conversion() &&
+		CommonType<Type2>::allow_implicit_conversion();
+	}
+
+	template<typename Type1, typename Type2>
+	using enable_operator =
+	    std::enable_if<
+	        allow_common_conversion<Type1, Type2>(),
+	        common_type_t<Type1, Type2>>::type;
+    }
+
+    template<typename ScalarType, typename OtherType>
+    checked_detail::enable_operator<check_conversion<ScalarType>, OtherType>
+    operator+(
+	check_conversion<ScalarType> const lhs, OtherType const rhs)
+    {
+	common_type_t<check_conversion<ScalarType>, OtherType> lhs_copy = lhs;
+	lhs_copy.add(rhs);
+	return lhs_copy;
+    }
+
+    template<typename OtherType, typename ScalarType>
+    checked_detail::enable_operator<OtherType, check_conversion<ScalarType>>
+    operator+(
+	 OtherType const lhs, check_conversion<ScalarType> const rhs)
+    {
+	common_type_t<check_conversion<ScalarType>, OtherType> lhs_copy = lhs;
+	lhs_copy.add(rhs);
+	return lhs_copy;
+    }
 }
 
 #endif // SNL_CSTDINT_HPP
