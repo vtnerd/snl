@@ -34,11 +34,11 @@ The first two calls to `foo` are not an error because `uint8_t` can store all va
 
 ##### Comparison Operators #####
 The comparison operators between signed/unsigned will automatically handle arthmetic in the manner _expected_ by most programmers. A signed value will not automatically convert to an unsigned value in a comparison operation, unless the signed value is positive. If the signed value is negative, it will return the "correct" result:
-```
+```c++
    const std::int64_t standard1 = -1;
    const std::uint64_t standard2 = std::numeric_limits<std::uint64_t>::max();
-   snl::int64_t snl1 = standard1;
-   snl::uint64_t snl2 = standard2;
+   const snl::int64_t snl1 = standard1;
+   const snl::uint64_t snl2 = standard2;
    
    EXPECT_FALSE(standard1 < standard); // undefined behavior (signed underflow)
    EXPECT_TRUE(snl1 < snl2);
