@@ -2,6 +2,12 @@
 
 #include "snl/cstdint.hpp"
 
+#ifdef SNL_CPP11
+using namespace std;
+#else
+using namespace boost;
+#endif
+
 DESTINATION_TYPE test_type(DESTINATION_TYPE const value)
 {
     return value;
