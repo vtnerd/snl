@@ -1,6 +1,9 @@
 # SNL (Safe Numerics Library) #
 A C++ Safe Numerics Library _(in-progress)_. Designed to replace the built-in C++ scalar types with safer types. 
 
+## See Robert Ramey's Library Instead ##
+I started this library before I knew about [Robert's version](https://github.com/robertramey/safe_numerics) in the boost incubator. I then considered making a radical change - using `boost::expected` to report failures instead of exceptions. I am not sure on the direction of this change, because I think it will require more "boilerplate" to use the non-exception way than most are willing to accept. Progress on this library may continue in the future if I change my mind.
+
 ### check_conversion ###
 ##### Implicit Conversions #####
 Standard types (`snl::uint16_t`, etc.) have the implicit conversion disabled when destination type cannot safely store all values from the source type. This provides stricter checking between interfaces; a function signature change could fail to compile, providing better analysis at compilation time.
